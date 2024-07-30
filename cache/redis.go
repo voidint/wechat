@@ -120,6 +120,7 @@ const (
 	PwdAuth SSHAuthMethod = 2
 )
 
+// OverSSH SSH 代理配置
 type OverSSH struct {
 	Host       string        `yml:"host" json:"host"`
 	Port       int           `yml:"port" json:"port"`
@@ -129,6 +130,7 @@ type OverSSH struct {
 	KeyFile    string        `yml:"key_file" json:"key_file"`
 }
 
+// DialWithPassword 返回密码方式认证的 SSH 客户端
 func (s *OverSSH) DialWithPassword() (*ssh.Client, error) {
 	return ssh.Dial(
 		"tcp",
@@ -143,6 +145,7 @@ func (s *OverSSH) DialWithPassword() (*ssh.Client, error) {
 	)
 }
 
+// DialWithKeyFile 返回公钥方式认证的 SSH 客户端
 func (s *OverSSH) DialWithKeyFile() (*ssh.Client, error) {
 	k, err := os.ReadFile(s.KeyFile)
 	if err != nil {
@@ -166,6 +169,7 @@ func (s *OverSSH) DialWithKeyFile() (*ssh.Client, error) {
 	)
 }
 
+// MakeDialer 创建 SSH 代理拨号器
 func (s *OverSSH) MakeDialer() func(ctx context.Context, network, addr string) (net.Conn, error) {
 	return func(ctx context.Context, network, addr string) (net.Conn, error) {
 		var err error
